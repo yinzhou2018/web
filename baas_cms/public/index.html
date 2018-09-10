@@ -12,22 +12,47 @@
 		body {
 			margin: 0px;
 		}
+
+		#container {
+			height: 100%;
+			width: 100%;
+		}
+
 		#header {
 			color: white;
 			background-color: rgb(0, 140, 255);
 			height: 60px;
-			padding: 0px 5px;
+			padding: 0px 10px;
 			line-height: 60px;
 			text-align: right;
-			overflow: hidden;
+		}
+
+		#header > h1 , #help {
+			margin: 0px;
+			float: left;
+			margin-right: 15px;
+		}
+
+		#help-img {
+			position: relative;
+			top: 2px;
+		}
+
+		#help > a {
+			font-size: medium;
+			color: white;
 		}
 	</style>
 </head>
 <body>
-    <div class = 'easyui-layout' style="height:100%;width:100%">
+    <div id = "container" class = 'easyui-layout'>
 		<div id="header" data-options="region:'north'">
-			<h1 style="margin:0px;float:left">浏览器云平台管理系统</h1>
-			<span>当前登录用户：周寅</span>
+			<h1>浏览器云平台管理系统</h1>
+			<div id='help'>
+				<img id = 'help-img' src="lib/easyui/themes/icons/help.png"/>
+				<a href="https://www.baidu.com">帮助</a>
+			</div>
+			<span style="font-size:medium;">当前登录用户：周寅</span>
 		</div>
 		<div id="nav" data-options="region:'west',title:'菜单',split:true" style="width:200px">
 			<ul id="menu" class="easyui-tree">
