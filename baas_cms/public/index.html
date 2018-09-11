@@ -1,112 +1,127 @@
 <!DOCUTYPE <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>浏览器云平台管理系统</title>
-	<link rel="stylesheet" type="text/css" href="lib/easyui/themes/bootstrap/easyui.css">
-	<link rel="stylesheet" type="text/css" href="lib/easyui/themes/icon.css">
-	<script type="text/javascript" src="lib/easyui/jquery.min.js"></script>
-	<script type="text/javascript" src="lib/easyui/jquery.easyui.min.js"></script>
-	<style>
-		body {
-			margin: 0px;
-		}
-
-		#container {
-			height: 100%;
-			width: 100%;
-		}
-
-		#header {
-			color: white;
-			background-color: rgb(0, 140, 255);
-			height: 60px;
-			padding: 0px 10px;
-			line-height: 60px;
-			text-align: right;
-		}
-
-		#header > h1 , #help {
-			margin: 0px;
-			float: left;
-			margin-right: 15px;
-		}
-
-		#help-img {
-			position: relative;
-			top: 2px;
-		}
-
-		#help > a {
-			font-size: medium;
-			color: white;
-		}
-	</style>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>浏览器云平台管理系统</title>
+  <link rel="stylesheet" type="text/css" href="lib/easyui/themes/bootstrap/easyui.css">
+  <link rel="stylesheet" type="text/css" href="lib/easyui/themes/icon.css">
+  <script type="text/javascript" src="lib/easyui/jquery.min.js"></script>
+  <script type="text/javascript" src="lib/easyui/jquery.easyui.min.js"></script>
+  <style>
+    body,
+    html {
+      margin: 0px;
+      height: 100%;
+      width: 100%;
+    }
+    
+    #container {
+      height: 100%;
+      width: 100%;
+    }
+    
+    #header {
+      color: white;
+      background-color: rgb(0, 140, 255);
+      height: 60px;
+      padding: 0px 10px;
+      line-height: 60px;
+      text-align: right;
+      overflow: hidden;
+    }
+    
+    #header>h1,
+    #help {
+      margin: 0px;
+      float: left;
+      margin-right: 15px;
+    }
+    
+    #help-img {
+      position: relative;
+      top: 2px;
+    }
+    
+    #help>a {
+      font-size: medium;
+      color: white;
+    }
+  </style>
 </head>
-<body>
-    <div id = "container" class = 'easyui-layout'>
-		<div id="header" data-options="region:'north'">
-			<h1>浏览器云平台管理系统</h1>
-			<div id='help'>
-				<img id = 'help-img' src="lib/easyui/themes/icons/help.png"/>
-				<a href="https://www.baidu.com">帮助</a>
-			</div>
-			<span style="font-size:medium;">当前登录用户：周寅</span>
-		</div>
-		<div id="nav" data-options="region:'west',title:'菜单',split:true" style="width:200px">
-			<ul id="menu" class="easyui-tree">
-				<li>
-					<span>应用管理</span>
-					<ul>
-						<li data-options="id:'applist'"><span>应用列表</span></li>
-						<li data-options="id:'newapp'"><span>新建应用</span></li>
-					</ul>
-				</li>
-				<li>
-					<span>容器管理</span>
-					<ul>
-						<li><span>容器列表</span></li>
-						<li><span>新建容器</span></li>
-					</ul>
-				</li>
-			</ul>
-		</div>
-		<div id="content" data-options="region:'center'">
-			<div id="tabs" class="easyui-tabs" style="width:100%;height:100%">
-					<div title="About" style="padding:10px">
-						<p style="font-size:14px">jQuery EasyUI framework helps you build your web pages easily.</p>
-						<ul>
-							<li>easyui is a collection of user-interface plugin based on jQuery.</li>
-							<li>easyui provides essential functionality for building modem, interactive, javascript applications.</li>
-							<li>using easyui you don't need to write many javascript code, you usually defines user-interface by writing some HTML markup.</li>
-							<li>complete framework for HTML5 web page.</li>
-							<li>easyui save your time and scales while developing your products.</li>
-							<li>easyui is very easy but powerful.</li>
-						</ul>
-					</div>
-					<div title="Help" data-options="iconCls:'icon-help',closable:true" style="padding:10px">
-						This is the help content.
-					</div>
-				</div>
-		</div>
-	</div>
-	<script>
-		$.parser.onComplete = function(context) {
-			console.log(context);
-			let node = $("#menu").tree('find', 'applist');
-			$("#menu").tree('select', node.target);
 
-			$("#menu").tree({onClick: function(node) {
-				if (node.id === 'newapp') {
-					$("#tabs").tabs("add", {
-						title: "新建应用",
-						content: "Tab body",
-						closable: true
-					});
-				}
-			}});
-		}
-	</script>
+<body>
+  <div id="container" class='easyui-layout' data-options="fit:true">
+    <div id="header" data-options="region:'north'">
+      <h1>浏览器云平台管理系统</h1>
+      <div id='help'>
+        <img id='help-img' src="lib/easyui/themes/icons/help.png" />
+        <a id='help-btn' href="https://www.baidu.com">帮助</a>
+      </div>
+      <span style="font-size:medium;">当前登录用户：周寅</span>
+    </div>
+    <div id="nav" data-options="region:'west',title:'菜单',split:true" style="width:200px">
+      <ul id="menu" class="easyui-tree">
+        <li>
+          <span>应用管理</span>
+          <ul>
+            <li data-options="id:'applist'"><span>应用列表</span></li>
+            <li data-options="id:'newapp'"><span>新建应用</span></li>
+          </ul>
+        </li>
+        <li>
+          <span>容器管理</span>
+          <ul>
+            <li><span>容器列表</span></li>
+            <li><span>新建容器</span></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div id="content" data-options="region:'center'">
+      <div id="tabs" class="easyui-tabs" data-options="fit:true">
+        <div title="About" style="padding:10px">
+          <p style="font-size:14px">jQuery EasyUI framework helps you build your web pages easily.</p>
+          <ul>
+            <li>easyui is a collection of user-interface plugin based on jQuery.</li>
+            <li>easyui provides essential functionality for building modem, interactive, javascript applications.</li>
+            <li>using easyui you don't need to write many javascript code, you usually defines user-interface by writing some HTML markup.</li>
+            <li>complete framework for HTML5 web page.</li>
+            <li>easyui save your time and scales while developing your products.</li>
+            <li>easyui is very easy but powerful.</li>
+          </ul>
+        </div>
+        <div title="Help" data-options="iconCls:'icon-help',closable:true" style="padding:10px">
+          This is the help content.
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    $.parser.onComplete = function(context) {
+      console.log(context);
+      let node = $("#menu").tree('find', 'applist');
+      $("#menu").tree('select', node.target);
+
+      $("#menu").tree({
+        onClick: function(node) {
+          if (node.id === 'newapp') {
+            $("#tabs").tabs("add", {
+              title: "新建应用",
+              content: "Tab body",
+              closable: true
+            });
+          }
+        }
+      });
+    }
+
+    $('#help-btn').click((e) => {
+      e.preventDefault();
+      alert("help!");
+    })
+  </script>
 </body>
+
 </html>
