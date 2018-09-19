@@ -1,0 +1,37 @@
+<!DOCUTYPE <!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>浏览器云平台管理系统</title>
+  <link rel="stylesheet" type="text/css" href="lib/easyui/themes/bootstrap/easyui.css">
+  <link rel="stylesheet" type="text/css" href="lib/easyui/themes/icon.css">
+  <link rel="stylesheet" type="text/css" href="views/main.css">
+  <script type="text/javascript" src="lib/easyui/jquery.min.js"></script>
+  <script type="text/javascript" src="lib/easyui/jquery.easyui.min.js"></script>
+  <script type="text/javascript" src="js/main.js"></script>
+</head>
+
+<body>
+  <div id="container" class='easyui-layout' data-options="fit:true">
+    <div id="header" data-options="region:'north'">
+      <h1>浏览器云平台管理系统</h1>
+      <div id='help'>
+        <img id='help-img' src="lib/easyui/themes/icons/help.png" />
+        <a id='help-btn' target="_blank" href="https://www.baidu.com">帮助</a>
+      </div>
+      <span style="font-size:medium;">当前用户：<%=user%></span>
+    </div>
+    <div id="nav" data-options="region:'west',title:'导航区',split:true" style="width:200px">
+      <ul id="menu" class="easyui-tree"></ul>
+    </div>
+    <div id="content" data-options="region:'center'">
+      <div id="tabs" class="easyui-tabs" data-options="fit:true" style="margin-left: 5px">
+      </div>
+    </div>
+  </div>
+  <% include ./app_panels.ejs %>
+</body>
+
+</html>

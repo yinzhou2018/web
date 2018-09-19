@@ -1,0 +1,24 @@
+<template id="app_list_panel" type="text/template">
+  <script type='text/javascript' src='js/app_list.js'></script>
+  <div style="padding-top:10px" style='width:100%'>
+    <table class="easyui-datagrid" data-options="singleSelect:true,toolbar:'#tb',fitColumns:true,url:'appList',method:'get'" style='width:100%'>
+      <thead>
+        <tr>
+          <th data-options="field:'appId',width:150,formatter:appListController.formatAppId">应用名</th>
+          <th data-options="field:'createTime', width:200">创建时间</th>
+          <th data-options="field:'createUser', width:150">创建人</th>
+          <th data-options="field:'updateTime', width:200">最近修改时间</th>
+          <th data-options="field:'updateUser', width:150">最近修改人</th>
+          <th data-options="field:'operation', formatter:appListController.formatOeration, width:200">操作</th>
+        </tr>
+      </thead>
+    </table>
+    <div id='tb' style='padding: 10px'>
+      <label>应用名: </label>
+      <input class="easyui-textbox" name="app_name" style="width:200px">
+      <label>修改人: </label>
+      <input class="easyui-textbox" name="app_author" style="width:200px">
+      <a href="#" class="easyui-linkbutton" id="app_search" iconCls="icon-search">搜索</a>
+    </div>
+  </div>
+ </template>
