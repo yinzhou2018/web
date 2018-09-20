@@ -10,6 +10,7 @@
   <link rel="stylesheet" type="text/css" href="views/main.css">
   <script type="text/javascript" src="lib/easyui/jquery.min.js"></script>
   <script type="text/javascript" src="lib/easyui/jquery.easyui.min.js"></script>
+  <script type="text/javascript" src="js/utils.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
 </head>
 
@@ -21,7 +22,7 @@
         <img id='help-img' src="lib/easyui/themes/icons/help.png" />
         <a id='help-btn' target="_blank" href="https://www.baidu.com">帮助</a>
       </div>
-      <span style="font-size:medium;">当前用户：<%=user%></span>
+      <span style="font-size:medium;">当前用户：</span><span id='user' style="font-size:medium;"><%=user%></span>
     </div>
     <div id="nav" data-options="region:'west',title:'导航区',split:true" style="width:200px">
       <ul id="menu" class="easyui-tree"></ul>
@@ -31,7 +32,8 @@
       </div>
     </div>
   </div>
-  <% include ./app_panels.ejs %>
+  <% include ./app_list_panel.ejs %>
+    <% include ./app_configuration_panel.ejs %>
 </body>
 
 </html>

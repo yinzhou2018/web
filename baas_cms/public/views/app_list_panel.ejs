@@ -1,15 +1,15 @@
 <template id="app_list_panel" type="text/template">
-  <script type='text/javascript' src='js/app_list.js'></script>
+  <script type='text/javascript' src='js/app_list_panel.js'></script>
   <div style="padding-top:10px" style='width:100%'>
-    <table class="easyui-datagrid" data-options="singleSelect:true,toolbar:'#tb',fitColumns:true,url:'appList',method:'get'" style='width:100%'>
+    <table id='dg_app_list' class="easyui-datagrid" data-options="singleSelect:true,toolbar:'#tb',fitColumns:true" style='width:100%'>
       <thead>
         <tr>
-          <th data-options="field:'appId',width:150,formatter:appListController.formatAppId">应用名</th>
+          <th data-options="field:'appId',width:150,formatter:appListPanel.formatAppId">应用名</th>
           <th data-options="field:'createTime', width:200">创建时间</th>
           <th data-options="field:'createUser', width:150">创建人</th>
           <th data-options="field:'updateTime', width:200">最近修改时间</th>
           <th data-options="field:'updateUser', width:150">最近修改人</th>
-          <th data-options="field:'operation', formatter:appListController.formatOeration, width:200">操作</th>
+          <th data-options="field:'operation', formatter:appListPanel.formatOperation, width:200">操作</th>
         </tr>
       </thead>
     </table>
