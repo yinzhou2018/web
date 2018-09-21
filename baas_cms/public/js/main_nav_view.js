@@ -6,7 +6,6 @@
   const ID_APP_APPROVAL_LIST = seed++;
   const ID_CONTAINER_LIST = seed++;
   const ID_CONTAINER_APPLY = seed++;
-  const ID_CONTAINER_APPROVAL_LIST = seed++;
 
   const menuModel = [{
       text: '应用管理',
@@ -18,12 +17,8 @@
         },
         {
           id: ID_APP_APPLY,
-          text: '应用申请',
-          action: applyApp
-        },
-        {
-          id: ID_APP_APPROVAL_LIST,
-          text: '应用审批列表'
+          text: '新建应用',
+          action: applyApp()
         }
       ]
     },
@@ -35,23 +30,25 @@
         },
         {
           id: ID_CONTAINER_APPLY,
-          text: '容器申请'
-        },
-        {
-          id: ID_CONTAINER_APPROVAL_LIST,
-          text: '容器审批列表'
+          text: '新建容器'
         }
       ]
     }
   ]; //menuModel
 
-  function applyApp(node) {
-    console.log('applyApp');
+  function applyApp() {
+    let index = 1;
+    const impl = (node) => {
+      let title = '新建应用:unnamedapp' + index++;
+      mainTabsView.addTab('app_configuration_panel', title, false);
+      appConfigurationPanel.init(title, '', true, false);
+    }
+    return impl;
   }
 
   const mainNavView = {
     async init() {
-      await require('js/main_tabs_view.js');
+      await utils.require('js/main_tabs_view.js');
 
       $("#menu").tree('loadData', menuModel);
 

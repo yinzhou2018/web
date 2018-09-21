@@ -5,7 +5,7 @@
   async function waitForReady() {
     if (!ready) {
       try {
-        apps = await request('api/apps');
+        apps = await utils.request('api/apps');
         ready = true;
       } catch (e) {
         console.error('Request apps failed!');

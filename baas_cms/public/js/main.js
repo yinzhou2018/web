@@ -1,7 +1,7 @@
 const global = {};
 
 async function init() {
-  await require('js/main_nav_view.js');
+  await utils.require('js/main_nav_view.js');
   mainNavView.init();
 }
 

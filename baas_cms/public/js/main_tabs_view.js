@@ -20,4 +20,5 @@
   };
 
   window.mainTabsView = mainTabsView;
+
 }())
