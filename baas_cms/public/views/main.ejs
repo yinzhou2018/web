@@ -10,15 +10,22 @@
   <link rel="stylesheet" type="text/css" href="views/main.css">
   <script type="text/javascript" src="lib/easyui/jquery.min.js"></script>
   <script type="text/javascript" src="lib/easyui/jquery.easyui.min.js"></script>
+  <script type="text/javascript" src="lib/ejs.min.js"></script>
   <script type="text/javascript" src="js/utils.js"></script>
-  <script type="text/javascript" src="js/main.js"></script>
+  <script type="text/javascript" src="js/tabs_view.js"></script>
+  <script type="text/javascript" src="js/navigator_view.js"></script>
+  <script type="text/javascript" src="<%=main_js_path%>"></script>
 </head>
 
 <body>
   <div id="container" class='easyui-layout' data-options="fit:true">
     <div id="header" data-options="region:'north'">
       <h1>浏览器云平台管理系统</h1>
-      <div id='help'>
+      <% if (appId) { %>
+        <span style="font-size:medium">(<%=appId%>)</span>
+        <a href="<%=homepage%>" style="font-size:medium;color:white;margin-left:15px">首页</a>
+      <% } %>
+      <div id='help' style="margin-left:15px">
         <img id='help-img' src="lib/easyui/themes/icons/help.png" />
         <a id='help-btn' target="_blank" href="https://www.baidu.com">帮助</a>
       </div>
@@ -32,8 +39,6 @@
       </div>
     </div>
   </div>
-  <% include ./app_list_panel.ejs %>
-    <% include ./app_configuration_panel.ejs %>
 </body>
 
 </html>

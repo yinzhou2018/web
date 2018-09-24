@@ -1,36 +1,51 @@
-(function() {
-  async function init() {
-    await utils.require('js/apps_model.js');
-    apps = await appsModel.getAll();
-    if (apps.length !== 0) {
-      $('#dg_app_list').datagrid('loadData', apps);
-    }
+function AppListPanel(title) {
+  this.title = title;
+  return this;
+}
+
+AppListPanel.prototype = new TabPanel();
+
+AppListPanel.prototype.tabParams = function() {
+  return  { title: this.title, url: "views/app_list_panel.ejs" };
+}
+
+AppListPanel.prototype.documentReady = async function() {
+  await utils.require('js/apps_model.js');
+  apps = await appsModel.getAll();
+  if (apps.length !== 0) {
+    $('#dg_app_list').datagrid('loadData', apps);
+  }
+}
+
+AppListPanel.prototype.formatAppId = function(value, rowData, rowIndex) {
+  return `<a href=${value} title="进入应用" class="easyui-tooltip">${value}</a>`;
+}
+
+AppListPanel.prototype.formatOperation = function(value, rowData, rowIndex) {
+  return `<a href='javascript:appListPanel.browserApp("${rowData.appId}")' style='margin-right:10px'>详情</a>
+  <a href='javascript:appListPanel.editApp("${rowData.appId}")'>编辑</a>`;
+}
+
+AppListPanel.prototype.editApp = async function(appId) {
+  let title = '应用编辑: ' + appId;
+  if (tabsView.activateTab(title)) {
+    return;
   }
 
-  init();
+  await utils.require('js/app_editor_panel.js');
+  appEditorPanel = new AppEditorPanel(title, appId, false, false);
+  appEditorPanel.show();  
+}
 
-  const appListPanel = {
-    formatAppId(value, rowData, rowIndex) {
-      return `<a href=${value} title="进入应用" class="easyui-tooltip">${value}</a>`;
-    },
+AppListPanel.prototype.browserApp = async function(appId) {
+  let title = '应用详情: ' + appId;
+  if (tabsView.activateTab(title)) {
+    return;
+  }
 
-    formatOperation(value, rowData, rowIndex) {
-      return `<a href='javascript:appListPanel.browserApp("${rowData.appId}")' style='margin-right:10px'>详情</a>
-              <a href='javascript:appListPanel.editApp("${rowData.appId}")'>编辑</a>`;
-    },
+  await utils.require('js/app_editor_panel.js');
+  appEditorPanel = new AppEditorPanel(title, appId, false, true);
+  appEditorPanel.show(); 
+}
 
-    async editApp(appId) {
-      let title = `应用编辑: ${appId}`;
-      mainTabsView.addTab('app_configuration_panel', title, true);
-      appConfigurationPanel.init(title, appId, false, false);
-    },
-
-    async browserApp(appId) {
-      let title = `应用详情: ${appId}`;
-      mainTabsView.addTab('app_configuration_panel', title, true);
-      appConfigurationPanel.init(title, appId, false, true);
-    }
-  };
-
-  window.appListPanel = appListPanel;
-}())
+appListPanel = new AppListPanel();
