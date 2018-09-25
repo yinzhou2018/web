@@ -3,7 +3,7 @@ const tabsView = {
     if (singleton && this.activateTab(title)) {
       return;
     }
-    
+
     $("#tabs").tabs("add", { title, content, closable });
   },
 
@@ -23,7 +23,28 @@ const tabsView = {
     }
 
     return false;
-  }
+  },
+
+  addCloseEventListener(listener) {
+    if (!this.closeEventRegistered) {
+      $("#tabs").tabs({ onClose: this._closeEventFired.bind(this) });
+      this.closeEventRegistered = true;
+    }
+    this.closeListeners.add(listener);
+  },
+
+  removeCloseEventListener(listener) {
+    this.closeListeners.delete(listener);
+  },
+
+  _closeEventFired(title, index) {
+    let tempListners = new Set();
+    this.closeListeners.forEach((e) => tempListners.add(e));
+    tempListners.forEach((e) => e.closeEventFired(title, index));
+  },
+
+  closeEventRegistered: false,
+  closeListeners: new Set()
 };
 
 function TabPanel() {
@@ -33,9 +54,26 @@ function TabPanel() {
 
     let template = await utils.require(tab.url);
     let content = ejs.render(template, ejsParams);
+
     realTitle = title || tab.title;
+    this.title = title;
+
     tabsView.addTab(realTitle, content);
-    this.documentReady();
+    tabsView.addCloseEventListener(this);
+
+    if (this.onDocReady) {
+      this.onDocReady();
+    }
+  };
+
+  this.closeEventFired = function(title, index) {
+    if (title === this.title) {
+      tabsView.removeCloseEventListener(this);
+      if (this.onClosed) {
+        this.onClosed();
+      }
+    }
   }
+
   return this;
 }

@@ -3,7 +3,7 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const compress = require('compression');
-const apiRouter = require('./api_router');
+const appsRouter = require('./apps_router');
 
 var app = express();
 
@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
   res.render('main', { user: 'yinzhou', main_js_path: 'js/main.js', appId: null });
 });
 
-app.use('/api', apiRouter);
+app.use('/api/app', appsRouter);
 
 var server = app.listen(8000, function() {
   var host = server.address().address;

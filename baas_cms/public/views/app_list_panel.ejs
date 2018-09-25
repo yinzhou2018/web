@@ -1,12 +1,10 @@
 <div style="padding-top:10px" style='width:100%'>
-  <table id='dg_app_list' class="easyui-datagrid" data-options="singleSelect:true,toolbar:'#tb',fitColumns:true" style='width:100%'>
+  <table id='dg_app_list' class="easyui-datagrid" data-options="singleSelect:true,toolbar:'#tb',fitColumns:true, pagination:true, pagesize:20" style='width:90%'>
     <thead>
       <tr>
         <th data-options="field:'appId',width:150,formatter:appListPanel.formatAppId">应用名</th>
-        <th data-options="field:'createTime', width:200">创建时间</th>
-        <th data-options="field:'createUser', width:150">创建人</th>
-        <th data-options="field:'updateTime', width:200">最近修改时间</th>
-        <th data-options="field:'updateUser', width:150">最近修改人</th>
+        <th data-options="field:'updateTime', width:200">修改时间</th>
+        <th data-options="field:'updateUser', width:150">修改人</th>
         <th data-options="field:'operation', formatter:appListPanel.formatOperation, width:200">操作</th>
       </tr>
     </thead>
@@ -14,10 +12,8 @@
   <div id='tb' style='padding: 10px'>
     <label>应用名: </label>
     <input class="easyui-textbox" name="app_name" style="width:150px">
-    <label>创建人: </label>
-    <input class="easyui-textbox" name="app_author" style="width:150px">
-    <label>最近修改人: </label>
+    <label>修改人: </label>
     <input class="easyui-textbox" name="app_updater" style="width:150px">
     <a href="#" class="easyui-linkbutton" id="app_search" iconCls="icon-search">搜索</a>
   </div>
-</div
+</div>

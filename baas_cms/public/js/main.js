@@ -1,4 +1,3 @@
-
 var seed = 1;
 const ID_APP_LIST = seed++;
 const ID_APP_APPLY = seed++;
@@ -15,10 +14,10 @@ async function showAppList(node) {
 
 function newApp() {
   let index = 1;
-  const impl = async (node) => {
+  const impl = async(node) => {
     let title = node.text + ':unnamedapp' + index++;
     await utils.require('js/app_editor_panel.js');
-    let appEditorPanel = new AppEditorPanel(title, '', true, false);
+    let appEditorPanel = new AppEditorPanel(title, '', AppEditorPanel.NEWAPP);
     appEditorPanel.show();
   }
   return impl;
