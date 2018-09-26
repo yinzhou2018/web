@@ -1,85 +1,81 @@
-function AppListPanel(title) {
-  this.title = title;
-  return this;
-}
-
-AppListPanel.prototype = new TabPanel();
-
-AppListPanel.prototype.tabParams = function() {
-  return { title: this.title, url: "views/app_list_panel.ejs" };
-}
-
-AppListPanel.prototype.onDocReady = async function() {
-  await utils.require('js/apps_model.js');
-  apps = await appsModel.getAll();
-  if (apps.length !== 0) {
-    $('#dg_app_list').datagrid('loadData', apps);
-  }
-  appsModel.addListener(this);
-}
-
-AppListPanel.prototype.formatAppId = function(value, rowData, rowIndex) {
-  return `<a href=${value} title="进入应用" class="easyui-tooltip">${value}</a>`;
-}
-
-AppListPanel.prototype.formatOperation = function(value, rowData, rowIndex) {
-  return `<a href='javascript:appListPanel.browserApp("${rowData.appId}")' style='margin-right:10px'>详情</a>
-  <a href='javascript:appListPanel.editApp("${rowData.appId}")' style='margin-right:10px'>编辑</a>
-  <a href='javascript:appListPanel.removeApp("${rowData.appId}")'>删除</a>`;
-}
-
-AppListPanel.prototype.editApp = async function(appId) {
-  let title = '应用编辑: ' + appId;
-  if (tabsView.activateTab(title)) {
-    return;
+class AppListPanel extends TabPanel {
+  constructor(title) {
+    super(title, 'views/app_list_panel.ejs');
   }
 
-  await utils.require('js/app_editor_panel.js');
-  appEditorPanel = new AppEditorPanel(title, appId, AppEditorPanel.EDITAPP);
-  appEditorPanel.show();
-}
+  async onDocReady() {
+    await utils.require('js/apps_model.js');
+    const { errorCode, errorMsg, apps, total } = await appsModel.query({ offset: 0, limit: 20 });
+    if (errorCode === 0 && apps.length !== 0) {
+      $('#dg_app_list').datagrid('loadData', apps);
+    }
 
-AppListPanel.prototype.browserApp = async function(appId) {
-  let title = '应用详情: ' + appId;
-  if (tabsView.activateTab(title)) {
-    return;
+    appsModel.addListener(this);
   }
 
-  await utils.require('js/app_editor_panel.js');
-  appEditorPanel = new AppEditorPanel(title, appId, AppEditorPanel.BROWSERAPP);
-  appEditorPanel.show();
-}
+  formatAppId(value, rowData, rowIndex) {
+    return `<a href=${value} title="进入应用" class="easyui-tooltip">${value}</a>`;
+  }
 
-AppListPanel.prototype.removeApp = async function(appId) {
-  appsModel.remove(appId);
-}
+  formatOperation(value, rowData, rowIndex) {
+    return `<a href='javascript:appListPanel.browserApp("${rowData.appId}")' style='margin-right:10px'>详情</a>
+    <a href='javascript:appListPanel.editApp("${rowData.appId}")' style='margin-right:10px'>编辑</a>
+    <a href='javascript:appListPanel.removeApp("${rowData.appId}")'>删除</a>`;
+  }
 
-AppListPanel.prototype.onClosed = function() {
-  appsModel.removeListener(this);
-}
+  async editApp(appId) {
+    const title = '应用编辑: ' + appId;
+    if (tabsView.activateTab(title)) {
+      return;
+    }
 
-AppListPanel.prototype.onAppCreated = function(app) {
-  $('#dg_app_list').datagrid('insertRow', { index: 0, row: app });
-}
+    await utils.require('js/app_editor_panel.js');
+    const appEditorPanel = new AppEditorPanel(title, appId, AppEditorPanel.EDITAPP);
+    appEditorPanel.show();
+  }
 
-AppListPanel.prototype.onAppUpdated = function(app) {
-  rows = $('#dg_app_list').datagrid('getRows');
-  for (let i = 0; i < rows.length; ++i) {
-    if (rows[i].appId === app.appId) {
-      $('#dg_app_list').datagrid('updateRow', { index: i, row: app });
-      break;
+  async browserApp(appId) {
+    let title = '应用详情: ' + appId;
+    if (tabsView.activateTab(title)) {
+      return;
+    }
+
+    await utils.require('js/app_editor_panel.js');
+    const appEditorPanel = new AppEditorPanel(title, appId, AppEditorPanel.BROWSERAPP);
+    appEditorPanel.show();
+  }
+
+  async removeApp(appId) {
+    appsModel.remove(appId);
+  }
+
+  onClosed() {
+    appsModel.removeListener(this);
+  }
+
+  onAppCreated(app) {
+    $('#dg_app_list').datagrid('insertRow', { index: 0, row: app });
+  }
+
+  onAppUpdated(app) {
+    rows = $('#dg_app_list').datagrid('getRows');
+    for (let i = 0; i < rows.length; ++i) {
+      if (rows[i].appId === app.appId) {
+        $('#dg_app_list').datagrid('updateRow', { index: i, row: app });
+        break;
+      }
     }
   }
-}
 
-AppListPanel.prototype.onAppRemoved = function(appId) {
-  rows = $('#dg_app_list').datagrid('getRows');
-  for (let i = 0; i < rows.length; ++i) {
-    if (rows[i].appId === appId) {
-      $('#dg_app_list').datagrid('deleteRow', i);
-      break;
+  onAppRemoved(appId) {
+    rows = $('#dg_app_list').datagrid('getRows');
+    for (let i = 0; i < rows.length; ++i) {
+      if (rows[i].appId === appId) {
+        $('#dg_app_list').datagrid('deleteRow', i);
+        break;
+      }
     }
   }
-}
+};
 
-appListPanel = new AppListPanel();
+const appListPanel = new AppListPanel('应用列表');

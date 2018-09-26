@@ -7,14 +7,14 @@ const utils = {
         return this.request(path, 'get', '', '');
 
       } else if (js_pattern.test(path)) {
-        let scs = $('script');
+        let scs = $('head').children('script');
         for (let i = 0; i < scs.length; ++i) {
           let element = scs.get(i);
           if (element.src.indexOf(path) !== -1) {
             return Promise.resolve();
           }
         }
-  
+
         let pro = new Promise((resolve, reject) => {
           var done = false;
           var script = document.createElement('script');
@@ -28,16 +28,16 @@ const utils = {
               resolve();
             }
           }
-          document.getElementsByTagName("head")[0].appendChild(script);
+          document.getElementsByTagName('head')[0].appendChild(script);
         })
-  
+
         return pro;
-      } 
+      }
 
       return Promise.resolve();
     },
 
-    request(url, type = 'get', data, dataType='json') {
+    request(url, type = 'get', data, dataType = 'json') {
       return new Promise((resolve, reject) => {
         $.ajax({
           url,
@@ -53,5 +53,5 @@ const utils = {
         })
       });
     }
-    
+
   } //utils

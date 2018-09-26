@@ -18,7 +18,7 @@ app.use(cookieParser());
 app.use(express.static(`${__dirname}/public`));
 
 app.get('/', (req, res) => {
-  res.render('main', { user: 'yinzhou', main_js_path: 'js/main.js', appId: null });
+  res.render('frame', { user: 'yinzhou', main_js_path: 'js/main.js', appId: null });
 });
 
 app.use('/api/app', appsRouter);

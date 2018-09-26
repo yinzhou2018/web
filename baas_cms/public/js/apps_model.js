@@ -1,5 +1,5 @@
 (function() {
-  var listeners = new Set();
+  const listeners = new Set();
 
   function _fireEvent(methodName, arg) {
     let tempListeners = new Set();
@@ -12,15 +12,16 @@
   }
 
   const appsModel = {
-    async query(condition, offset, limit) {
-      let url = `api/app?`;
-      for (let key in condition) {
-        url += `${key}=${condition[key]}&`;
+    async query(condition) {
+      let url = `api/app?random=${Math.random()}`;
+      if (condition) {
+        for (let key in condition) {
+          url += `&${key}=${condition[key]}`;
+        }
       }
-      url += `offset=${offset}&limit=${limit}&random=${Math.random()}`;
 
-      let result = await utils.request(url).catch((e) => {
-        console.error(`get apps error: ${e.stack}`);
+      const result = await utils.request(url).catch((e) => {
+        console.error(`get apps error: ${e}`);
         return { errorCode: -123, errorMsg: 'unkown error!' };
       });
 
@@ -29,9 +30,9 @@
 
     async add(app) {
       app.updateUser = global.userName;
-      let url = 'api/app';
-      let result = await utils.request(url, 'post', app).catch((e) => {
-        console.error(`create app(${app.appId}) failed: ${e.stack}`);
+      const url = 'api/app';
+      const result = await utils.request(url, 'post', app).catch((e) => {
+        console.error(`create app(${app.appId}) failed: ${e}`);
         return { errorCode: -123, errorMsg: 'unkown error!' };
       });
 
@@ -42,9 +43,9 @@
     },
 
     get: async function(appId) {
-      let url = `api/app/${appId}`;
-      let result = await utils.request(url).catch((e) => {
-        console.error(`get app(${app.appId}) failed: ${e.stack}`);
+      const url = `api/app/${appId}?random=${Math.random()}`;
+      const result = await utils.request(url).catch((e) => {
+        console.error(`get app(${app.appId}) failed: ${e}`);
         return { errorCode: -123, errorMsg: 'unkown error!' };
       });
 
@@ -52,9 +53,9 @@
     },
 
     async remove(appId) {
-      let url = `api/app/${appId}`;
-      let result = await utils.request(url, 'delete').catch((e) => {
-        console.error(`delete app(${app.appId}) failed: ${e.stack}`);
+      const url = `api/app/${appId}`;
+      const result = await utils.request(url, 'delete').catch((e) => {
+        console.error(`delete app(${app.appId}) failed: ${e}`);
         return { errorCode: -123, errorMsg: 'unkown error!' };
       });
 
@@ -66,9 +67,9 @@
 
     async update(app) {
       app.updateUser = global.userName;
-      let url = `api/app/${app.appId}`;
-      let result = await utils.request(url, 'put', app).catch((e) => {
-        console.error(`update app(${app.appId}) failed: ${e.stack}`);
+      const url = `api/app/${app.appId}`;
+      const result = await utils.request(url, 'put', app).catch((e) => {
+        console.error(`update app(${app.appId}) failed: ${e}`);
         return { errorCode: -123, errorMsg: 'unkown error!' };
       });
 

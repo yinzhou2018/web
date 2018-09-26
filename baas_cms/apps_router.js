@@ -93,8 +93,8 @@ api.put('/:appId', (req, res) => {
     app = req.body;
     app.updateTime = new Date();
     app.updateTime = app.updateTime.format("yyyy-MM-dd hh:mm:ss");
-    apps[index] = app;
-    res.json({ errorCode: 0, app });
+    Object.assign(apps[index], app);
+    res.json({ errorCode: 0, app: apps[index] });
   }
 });
 

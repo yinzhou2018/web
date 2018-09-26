@@ -16,7 +16,7 @@ const tabsView = {
   },
 
   activateTab(title) {
-    let tab = this.getTab(title);
+    const tab = this.getTab(title);
     if (tab) {
       $('#tabs').tabs("select", title)
       return true;
@@ -47,26 +47,26 @@ const tabsView = {
   closeListeners: new Set()
 };
 
-function TabPanel() {
-  this.show = async function(title) {
-    const tab = this.tabParams();
-    ejsParams = tab.params || {};
-
-    let template = await utils.require(tab.url);
-    let content = ejs.render(template, ejsParams);
-
-    realTitle = title || tab.title;
+class TabPanel {
+  constructor(title, templatePath, templateParams = {}) {
     this.title = title;
+    this.templatePath = templatePath;
+    this.templateParams = templateParams;
+  }
 
-    tabsView.addTab(realTitle, content);
+  async show() {
+    const template = await utils.require(this.templatePath);
+    let content = ejs.render(template, this.templateParams);
+
+    tabsView.addTab(this.title, content);
     tabsView.addCloseEventListener(this);
 
     if (this.onDocReady) {
       this.onDocReady();
     }
-  };
+  }
 
-  this.closeEventFired = function(title, index) {
+  closeEventFired(title, index) {
     if (title === this.title) {
       tabsView.removeCloseEventListener(this);
       if (this.onClosed) {
@@ -74,6 +74,4 @@ function TabPanel() {
       }
     }
   }
-
-  return this;
-}
+};
