@@ -38,8 +38,7 @@ const tabsView = {
   },
 
   _closeEventFired(title, index) {
-    let tempListners = new Set();
-    this.closeListeners.forEach((e) => tempListners.add(e));
+    const tempListners = [...this.closeListeners];
     tempListners.forEach((e) => e.closeEventFired(title, index));
   },
 

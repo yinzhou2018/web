@@ -58,7 +58,7 @@ class AppListPanel extends TabPanel {
   }
 
   onAppUpdated(app) {
-    rows = $('#dg_app_list').datagrid('getRows');
+    const rows = $('#dg_app_list').datagrid('getRows');
     for (let i = 0; i < rows.length; ++i) {
       if (rows[i].appId === app.appId) {
         $('#dg_app_list').datagrid('updateRow', { index: i, row: app });
@@ -68,7 +68,7 @@ class AppListPanel extends TabPanel {
   }
 
   onAppRemoved(appId) {
-    rows = $('#dg_app_list').datagrid('getRows');
+    const rows = $('#dg_app_list').datagrid('getRows');
     for (let i = 0; i < rows.length; ++i) {
       if (rows[i].appId === appId) {
         $('#dg_app_list').datagrid('deleteRow', i);

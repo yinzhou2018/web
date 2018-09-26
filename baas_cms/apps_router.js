@@ -90,7 +90,7 @@ api.put('/:appId', (req, res) => {
   if (index === -1) {
     res.json({ errorCode: -1, errorMsg: `can't find the app specified by ${req.params.appId}.` });
   } else {
-    app = req.body;
+    const app = req.body;
     app.updateTime = new Date();
     app.updateTime = app.updateTime.format("yyyy-MM-dd hh:mm:ss");
     Object.assign(apps[index], app);

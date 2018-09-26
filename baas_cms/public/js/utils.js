@@ -4,7 +4,7 @@ const utils = {
       let ejs_pattern = /.ejs$/i;
       let js_pattern = /.js$/i;
       if (ejs_pattern.test(path)) {
-        return this.request(path, 'get', '', '');
+        return this.request({url: path, dataType: ''});
 
       } else if (js_pattern.test(path)) {
         let scs = $('head').children('script');
@@ -37,20 +37,24 @@ const utils = {
       return Promise.resolve();
     },
 
-    request(url, type = 'get', data, dataType = 'json') {
+    request(args) {
       return new Promise((resolve, reject) => {
-        $.ajax({
-          url,
-          type,
-          data,
-          dataType,
+        const options = { 
+          type: 'get', 
+          dataType: 'json', 
+          contentType: 'application/json; charset=utf-8',
           success(data) {
             resolve(data);
           },
           error(e) {
-            reject();
+            reject(e);
           }
-        })
+        };
+        Object.assign(options, args);
+        if (options.data) {
+          options.data = JSON.stringify(options.data);
+        }
+        $.ajax(options);
       });
     }
 

@@ -20,10 +20,10 @@ class AppEditorPanel extends TabPanel {
     if (this.type !== AppEditorPanel.NEWAPP) {
       $(`#${this.templateParams.appId}`).textbox({ readonly: true });
 
-      const { errorCode, errorMsg, app: { configuration } } = await appsModel.get(this.appId);
+      const { errorCode, errorMsg, app: { description, configuration } } = await appsModel.get(this.appId);
       if (errorCode === 0) {
         $(`#${this.templateParams.appId}`).textbox('setText', this.appId);
-        $(`#${this.templateParams.descEditorId}`).textbox('setText', '啥也没留下');
+        $(`#${this.templateParams.descEditorId}`).textbox('setText', description);
         $(`#${this.templateParams.confEditorId}`).textbox('setText', JSON.stringify(configuration));
       }
     }
@@ -60,10 +60,10 @@ class AppEditorPanel extends TabPanel {
     }
   }
 
-  onAppUpdated(app) {
-    if (this.type === AppEditorPanel.BROWSERAPP && this.appId === app.appId) {
-      $(`#${this.templateParams.descEditorId}`).textbox('setText', app.description);
-      $(`#${this.templateParams.confEditorId}`).textbox('setText', JSON.stringify(app.configuration));
+  onAppUpdated({appId, description, configuration}) {
+    if (this.type === AppEditorPanel.BROWSERAPP && this.appId === appId) {
+      $(`#${this.templateParams.descEditorId}`).textbox('setText', description);
+      $(`#${this.templateParams.confEditorId}`).textbox('setText', JSON.stringify(configuration));
     }
   }
 
