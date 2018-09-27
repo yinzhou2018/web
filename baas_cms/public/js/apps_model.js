@@ -13,8 +13,12 @@
 
   const appsModel = {
     async query(condition = {}) {
-      Object.assign(condition, { random: Math.random() });
-      const result = await utils.request({ url: baseUrl, type: 'get', data: condition }).catch((e) => {
+      let url = `${baseUrl}?random=${Math.random()}`;
+      for (let key in condition) {
+        url += `&${key}=${condition[key]}`;
+      }
+
+      const result = await utils.request({ url }).catch((e) => {
         console.error(`get apps error: ${e}`);
         return { errorCode: -123, errorMsg: 'unkown error!' };
       });
@@ -47,7 +51,7 @@
 
     async remove(appId) {
       const url = `${baseUrl}/${appId}`;
-      const result = await utils.request({ url, tpe: 'delete' }).catch((e) => {
+      const result = await utils.request({ url, type: 'delete' }).catch((e) => {
         console.error(`delete app(${app.appId}) failed: ${e}`);
         return { errorCode: -123, errorMsg: 'unkown error!' };
       });

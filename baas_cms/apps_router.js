@@ -6,42 +6,98 @@ const apps = [{
     appId: 'sample',
     updateTime: '2018-09-20',
     updateUser: 'yinzhou',
-    configuration: {
-      mongo: {
-        uri: 'mongodb://uther:uther@100.65.31.149:27017,100.102.135.2:27017,100.94.25.85:27017/mastertest?replicaSet=qbset0'
-      },
-      mysql: {
-        host: 'pcqbtest.mdb.mig',
-        port: 15916,
-        user: 'writeuser',
-        password: 'fWs2Wg3j36qynafQ',
-        database: 'baas',
-        charset: 'utf8',
-        multipleStatements: true,
-        connectionLimit: 3,
-      }
-    }
+    configuration: {}
   },
   {
     appId: 'sample1',
     updateTime: '2018-09-20',
     updateUser: 'yinzhou',
-    configuration: {
-      mongo: {
-        uri: 'mongodb://uther:uther@100.65.31.149:27017,100.102.135.2:27017,100.94.25.85:27017/mastertest?replicaSet=qbset0'
-      },
-      mysql: {
-        host: 'pcqbtest.mdb.mig',
-        port: 15916,
-        user: 'writeuser',
-        password: 'fWs2Wg3j36qynafQ',
-        database: 'baas',
-        charset: 'utf8',
-        multipleStatements: true,
-        connectionLimit: 3,
-      }
-    }
-  }
+    configuration: {}
+  },
+  {
+    appId: 'sample2',
+    updateTime: '2018-09-20',
+    updateUser: 'yinzhou',
+    configuration: {}
+  },
+  {
+    appId: 'sample3',
+    updateTime: '2018-09-20',
+    updateUser: 'yinzhou',
+    configuration: {}
+  },
+  {
+    appId: 'sample4',
+    updateTime: '2018-09-20',
+    updateUser: 'yinzhou',
+    configuration: {}
+  },
+  {
+    appId: 'sample5',
+    updateTime: '2018-09-20',
+    updateUser: 'yinzhou',
+    configuration: {}
+  },
+  {
+    appId: 'sample6',
+    updateTime: '2018-09-20',
+    updateUser: 'yinzhou',
+    configuration: {}
+  },
+  {
+    appId: 'sample7',
+    updateTime: '2018-09-20',
+    updateUser: 'yinzhou',
+    configuration: {}
+  },
+  {
+    appId: 'sample8',
+    updateTime: '2018-09-20',
+    updateUser: 'yinzhou',
+    configuration: {}
+  },
+  {
+    appId: 'sample10',
+    updateTime: '2018-09-20',
+    updateUser: 'yinzhou',
+    configuration: {}
+  },
+  {
+    appId: 'sample11',
+    updateTime: '2018-09-20',
+    updateUser: 'yinzhou',
+    configuration: {}
+  },
+  {
+    appId: 'sample12',
+    updateTime: '2018-09-20',
+    updateUser: 'yinzhou',
+    configuration: {}
+  },
+  {
+    appId: 'sample13',
+    updateTime: '2018-09-20',
+    updateUser: 'yinzhou',
+    configuration: {}
+  },
+  {
+    appId: 'sample14',
+    updateTime: '2018-09-20',
+    updateUser: 'yinzhou',
+    configuration: {}
+  },
+  {
+    appId: 'sample15',
+    updateTime: '2018-09-20',
+    updateUser: 'yinzhou',
+    configuration: {}
+  },
+  {
+    appId: 'sample16',
+    updateTime: '2018-09-20',
+    updateUser: 'yinzhou',
+    configuration: {}
+  },
 ];
 
 Date.prototype.format = function(fmt) { //author: meizz 
@@ -73,7 +129,21 @@ api.post('/', (req, res) => {
 });
 
 api.get('/', (req, res) => {
-  res.json({ errorCode: 0, apps, total: apps.length });
+  const query = req.query;
+  const conditionApps = apps.filter((e) => {
+    if (query.appId && !e.appId.includes(query.appId)) {
+      return false;
+    }
+    if (query.updateUser && !e.updateUser.includes(query.updateUser)) {
+      return false;
+    }
+    return true;
+  });
+
+  const start = query.offset || 0;
+  const end = start + query.limit || apps.length;
+  const returnApps = conditionApps.slice(start, end);
+  res.json({ errorCode: 0, apps: returnApps, total: conditionApps.length });
 });
 
 api.get('/:appId', (req, res) => {
@@ -95,6 +165,16 @@ api.put('/:appId', (req, res) => {
     app.updateTime = app.updateTime.format("yyyy-MM-dd hh:mm:ss");
     Object.assign(apps[index], app);
     res.json({ errorCode: 0, app: apps[index] });
+  }
+});
+
+api.delete('/:appId', (req, res) => {
+  const index = apps.findIndex((e) => e.appId === req.params.appId);
+  if (index === -1) {
+    res.json({ errorCode: -1, errorMsg: `can't find the app specified by ${req.params.appId}.` });
+  } else {
+    apps.splice(index, 1);
+    res.json({ errorCode: 0, appId: req.params.appId });
   }
 });
 

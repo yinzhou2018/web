@@ -1,19 +1,21 @@
 class AppListPanel extends TabPanel {
   constructor(title) {
     super(title, 'views/app_list_panel.ejs');
+    appListPanel = this;
   }
 
   async onDocReady() {
     await utils.require('js/apps_model.js');
 
-    const pager = $('$dg_app_list').datagrid('getPager');
+    const pager = $('#dg_app_list').datagrid('getPager');
     pager.pagination({
       onSelectPage: this._onPageChanged.bind(this),
       onRefresh: this._onPageChanged.bind(this),
       onChangePageSize: this._onPageChanged.bind(this, 1)
     });
 
-    this._reload('', '', 0, 10);
+    const opt = pager.pagination('options');
+    this._reload('', '', opt.pageNumber, opt.pageSize);
     appsModel.addListener(this);
   }
 
@@ -54,11 +56,14 @@ class AppListPanel extends TabPanel {
   }
 
   onClosed() {
+    appListPanel = null;
     appsModel.removeListener(this);
   }
 
   onAppCreated(app) {
-    $('#dg_app_list').datagrid('insertRow', { index: 0, row: app });
+    const pager = $('#dg_app_list').datagrid('getPager');
+    const {pageNumber, pageSize} = pager.pagination('options');
+    this._reload('', '', pageNumber, pageSize);
   }
 
   onAppUpdated(app) {
@@ -72,21 +77,20 @@ class AppListPanel extends TabPanel {
   }
 
   onAppRemoved(appId) {
-    const rows = $('#dg_app_list').datagrid('getRows');
-    for (let i = 0; i < rows.length; ++i) {
-      if (rows[i].appId === appId) {
-        $('#dg_app_list').datagrid('deleteRow', i);
-        break;
-      }
-    }
+    const pager = $('#dg_app_list').datagrid('getPager');
+    const {total, pageNumber, pageSize} = pager.pagination('options');
+    const realTotal = total - 1;
+    const realPageNumber = (realTotal / pageSize) + ((realTotal % pageSize) ? 1 : 0);
+    this._reload('', '', pageNumber > realPageNumber ? realPageNumber : pageNumber, pageSize);
   }
 
   _onPageChanged(pageNumber, pageSize) {
-
+    this._reload('', '', pageNumber, pageSize);
   }
 
-  async _reload(appId, updateUser, offset, limit) {
-    options = { offset, limit };
+  async _reload(appId, updateUser, pageNumber, pageSize) {
+    const offset = ((pageNumber === 0 ? 1 : pageNumber) - 1) * pageSize;
+    const options = { offset, limit: pageSize };
     if (appId.length !== 0) {
       options.appId = appId;
     }
@@ -98,8 +102,8 @@ class AppListPanel extends TabPanel {
 
     if (errorCode === 0) {
       $('#dg_app_list').datagrid('loadData', apps);
-      const pager = $('$dg_app_list').datagrid('getPager');
-      pager.pagination({ total, pageNumber: offset / limit + 1 });
+      const pager = $('#dg_app_list').datagrid('getPager');
+      pager.pagination({ total, pageNumber });
     } else {
       $('#app_list_fail_cause').text(errorMsg);
       $('#app_list_fail_msg').css('display', 'block');
@@ -107,4 +111,4 @@ class AppListPanel extends TabPanel {
   }
 };
 
-const appListPanel = new AppListPanel('应用列表');
+let appListPanel = null;

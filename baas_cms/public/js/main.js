@@ -8,8 +8,13 @@ const ID_CONTAINER_APPLY = seed++;
 const global = {};
 
 async function showAppList(node) {
+  if (tabsView.activateTab(node.text)) {
+    return;
+  }
+
   await utils.require('js/app_list_panel.js');
-  appListPanel.show(node.text);
+  const appListPanel = new AppListPanel(node.text);
+  appListPanel.show();
 }
 
 function newApp() {
