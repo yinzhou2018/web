@@ -20,11 +20,14 @@ class AppEditorPanel extends TabPanel {
     if (this.type !== AppEditorPanel.NEWAPP) {
       $(`#${this.templateParams.appId}`).textbox({ readonly: true });
 
-      const { errorCode, errorMsg, app: { description, configuration } } = await appsModel.get(this.appId);
+      const { errorCode, errorMsg, app } = await appsModel.get(this.appId);
       if (errorCode === 0) {
         $(`#${this.templateParams.appId}`).textbox('setText', this.appId);
-        $(`#${this.templateParams.descEditorId}`).textbox('setText', description);
-        $(`#${this.templateParams.confEditorId}`).textbox('setText', JSON.stringify(configuration));
+        $(`#${this.templateParams.descEditorId}`).textbox('setText', app.description);
+        $(`#${this.templateParams.confEditorId}`).textbox('setText', JSON.stringify(app.configuration));
+      } else {
+        $('#app_editor_fail_cause').text(errorMsg);
+        $('#app_editor_fail_msg').css('display', 'block');
       }
     }
 
@@ -54,13 +57,15 @@ class AppEditorPanel extends TabPanel {
     const app = { appId, description, configuration };
 
     if (this.type === AppEditorPanel.NEWAPP) {
-      appsModel.add(app);
+      const promise = appsModel.add(app);
+      this._showOpStatus(promise, appId);
     } else {
-      appsModel.update(app);
+      const promise = appsModel.update(app);
+      this._showOpStatus(promise, appId);
     }
   }
 
-  onAppUpdated({appId, description, configuration}) {
+  onAppUpdated({ appId, description, configuration }) {
     if (this.type === AppEditorPanel.BROWSERAPP && this.appId === appId) {
       $(`#${this.templateParams.descEditorId}`).textbox('setText', description);
       $(`#${this.templateParams.confEditorId}`).textbox('setText', JSON.stringify(configuration));
@@ -75,6 +80,35 @@ class AppEditorPanel extends TabPanel {
 
   onClosed() {
     appsModel.removeListener(this);
+  }
+
+  _showOpStatus(promise, appId) {
+    const tabTitle = this.title;
+    const text = (this.type === AppEditorPanel.NEWAPP) ? '创建' : '更新';
+    $.messager.progress({
+      title: '请稍候',
+      msg: `应用${text}中...`
+    });
+    promise.then(({ errorCode, errorMsg, app }) => {
+      $.messager.progress('close');
+      if (errorCode !== 0) {
+        $.messager.alert({
+          title: '失败',
+          msg: `应用(${appId})${text}失败，原因:${errorMsg}`,
+          icon: 'error'
+        });
+      } else {
+        $.messager.confirm({
+          title: '成功',
+          msg: `应用(${appId})${text}成功，是否关闭当前面板？`,
+          fn: function(r) {
+            if (r) {
+              tabsView.closeTab(tabTitle);
+            }
+          }
+        });
+      }
+    })
   }
 };
 

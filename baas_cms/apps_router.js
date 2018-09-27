@@ -2,7 +2,7 @@ const express = require('express');
 
 const api = express.Router();
 
-apps = [{
+const apps = [{
     appId: 'sample',
     updateTime: '2018-09-20',
     updateUser: 'yinzhou',
@@ -45,7 +45,7 @@ apps = [{
 ];
 
 Date.prototype.format = function(fmt) { //author: meizz 
-  var o = {
+  const o = {
     "M+": this.getMonth() + 1, //月份 
     "d+": this.getDate(), //日 
     "h+": this.getHours(), //小时 
@@ -77,7 +77,7 @@ api.get('/', (req, res) => {
 });
 
 api.get('/:appId', (req, res) => {
-  let app = apps.find((e) => e.appId === req.params.appId);
+  const app = apps.find((e) => e.appId === req.params.appId);
   if (app) {
     res.json({ errorCode: 0, app });
   } else {
@@ -86,7 +86,7 @@ api.get('/:appId', (req, res) => {
 });
 
 api.put('/:appId', (req, res) => {
-  let index = apps.findIndex((e) => e.appId === req.params.appId);
+  const index = apps.findIndex((e) => e.appId === req.params.appId);
   if (index === -1) {
     res.json({ errorCode: -1, errorMsg: `can't find the app specified by ${req.params.appId}.` });
   } else {

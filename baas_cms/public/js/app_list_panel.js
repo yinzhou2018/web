@@ -5,11 +5,15 @@ class AppListPanel extends TabPanel {
 
   async onDocReady() {
     await utils.require('js/apps_model.js');
-    const { errorCode, errorMsg, apps, total } = await appsModel.query({ offset: 0, limit: 20 });
-    if (errorCode === 0 && apps.length !== 0) {
-      $('#dg_app_list').datagrid('loadData', apps);
-    }
 
+    const pager = $('$dg_app_list').datagrid('getPager');
+    pager.pagination({
+      onSelectPage: this._onPageChanged.bind(this),
+      onRefresh: this._onPageChanged.bind(this),
+      onChangePageSize: this._onPageChanged.bind(this, 1)
+    });
+
+    this._reload('', '', 0, 10);
     appsModel.addListener(this);
   }
 
@@ -74,6 +78,31 @@ class AppListPanel extends TabPanel {
         $('#dg_app_list').datagrid('deleteRow', i);
         break;
       }
+    }
+  }
+
+  _onPageChanged(pageNumber, pageSize) {
+
+  }
+
+  async _reload(appId, updateUser, offset, limit) {
+    options = { offset, limit };
+    if (appId.length !== 0) {
+      options.appId = appId;
+    }
+    if (updateUser.length !== 0) {
+      options.updateUser = updateUser;
+    }
+
+    const { errorCode, errorMsg, apps, total } = await appsModel.query(options);
+
+    if (errorCode === 0) {
+      $('#dg_app_list').datagrid('loadData', apps);
+      const pager = $('$dg_app_list').datagrid('getPager');
+      pager.pagination({ total, pageNumber: offset / limit + 1 });
+    } else {
+      $('#app_list_fail_cause').text(errorMsg);
+      $('#app_list_fail_msg').css('display', 'block');
     }
   }
 };
