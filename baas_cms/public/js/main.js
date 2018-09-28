@@ -62,11 +62,11 @@
 
   $(document).ready(function() {
     global.userName = $('#user').text();
-    window.appsModel = new BaseModel('/api/app', {
+    window.appsModel = new EntryModel('apps', {
       createName: 'onAppCreated',
       removeName: 'onAppRemoved',
       updateName: 'onAppUpdated'
-    });
+    }, { rtx: global.userName });
     navigatorView.init(menuModel, ID_APP_LIST);
   });
 })();

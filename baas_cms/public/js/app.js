@@ -138,10 +138,13 @@
   $(document).ready(function() {
     global.userName = $('#user').text();
     global.appId = $('#appId').text();
-    window.codesModel = new BaseModel(`/api/${global.appId}/code`, {
+    window.codesModel = new EntryModel('hooks', {
       createName: 'onCodeCreated',
       removeName: 'onCodeRemoved',
       updateName: 'onCodeUpdated'
+    }, {
+      rtx: global.userName,
+      app_id: global.appId
     });
 
     navigatorView.init(menuModel, ID_CODE_LIST);
