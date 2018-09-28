@@ -124,7 +124,7 @@ api.post('/', (req, res) => {
     app.updateTime = new Date();
     app.updateTime = app.updateTime.format("yyyy-MM-dd hh:mm:ss");
     apps.push(app);
-    res.json({ errorCode: 0, app });
+    res.json({ errorCode: 0, entry: app });
   }
 });
 
@@ -143,13 +143,13 @@ api.get('/', (req, res) => {
   const start = query.offset || 0;
   const end = start + query.limit || apps.length;
   const returnApps = conditionApps.slice(start, end);
-  res.json({ errorCode: 0, apps: returnApps, total: conditionApps.length });
+  res.json({ errorCode: 0, entries: returnApps, total: conditionApps.length });
 });
 
 api.get('/:appId', (req, res) => {
   const app = apps.find((e) => e.appId === req.params.appId);
   if (app) {
-    res.json({ errorCode: 0, app });
+    res.json({ errorCode: 0, entry: app });
   } else {
     res.json({ errorCode: -1, errorMsg: `can't find the app specified by ${req.params.appId}.` });
   }
@@ -164,7 +164,7 @@ api.put('/:appId', (req, res) => {
     app.updateTime = new Date();
     app.updateTime = app.updateTime.format("yyyy-MM-dd hh:mm:ss");
     Object.assign(apps[index], app);
-    res.json({ errorCode: 0, app: apps[index] });
+    res.json({ errorCode: 0, entry: apps[index] });
   }
 });
 
@@ -174,7 +174,7 @@ api.delete('/:appId', (req, res) => {
     res.json({ errorCode: -1, errorMsg: `can't find the app specified by ${req.params.appId}.` });
   } else {
     apps.splice(index, 1);
-    res.json({ errorCode: 0, appId: req.params.appId });
+    res.json({ errorCode: 0, id: req.params.appId });
   }
 });
 

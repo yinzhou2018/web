@@ -16,22 +16,16 @@ html {
   height: 60px;
   padding: 0px 10px;
   line-height: 60px;
-  text-align: right;
   overflow: hidden;
 }
 
-#header>h1,
-#help {
+#header>h1 {
   margin: 0px;
   float: left;
 }
 
-#help-img {
-  position: relative;
-  top: 2px;
-}
-
-#help>a {
+#header,
+#header-nav>a {
   font-size: medium;
   color: white;
 }

@@ -1,0 +1,29 @@
+<div style="padding-top:10px" style='width:100%'>
+  <div id='cod_list_fail_msg' style="color:red;display:none;margin-bottom:10px;font-size:medium">
+    代码列表加载失败，原因:<span id='code_list_fail_cause'></span>
+  </div>
+  <table id='dg_code_list' class="easyui-datagrid" data-options="singleSelect:true,toolbar:'#tb',fitColumns:true, pagination:true" style='width:95%'>
+    <thead>
+      <tr>
+        <th data-options="field:'id',width:50">版本</th>
+        <th data-options="field:'name',width:100">名称</th>
+        <th data-options="field:'type',width:100">类型</th>
+        <th data-options="field:'status',width:100,formatter:codeListPanel.formatStatus">状态</th>
+        <th data-options="field:'updateTime', width:100">修改时间</th>
+        <th data-options="field:'updateUser', width:100">修改人</th>
+        <th data-options="field:'operation', formatter:codeListPanel.formatOperation, width:150">操作</th>
+      </tr>
+    </thead>
+  </table>
+  <div id='tb' style='padding: 10px'>
+    <label>名称: </label>
+    <input class="easyui-textbox" id="code_name" style="width:150px">
+    <label>修改人: </label>
+    <input class="easyui-textbox" id="code_updater" style="width:150px">
+    <label>类型: </label>
+    <select id="code_type" data-options="editable:false, panelHeight:'auto', valueField:'value', textField:'text'" class="easyui-combobox" style="width:150px"></select>
+    <label>状态: </label>
+    <select id="code_status" data-options="editable:false, panelHeight:'auto', valueField:'value', textField:'text'" class="easyui-combobox" style="width:150px"></select>
+    <a href="javascript:codeListPanel.search()" class="easyui-linkbutton" id="code_search" iconCls="icon-search">搜索</a>
+  </div>
+</div>

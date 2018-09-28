@@ -15,12 +15,10 @@ class AppEditorPanel extends TabPanel {
   }
 
   async onDocReady() {
-    await utils.require('js/apps_model.js');
-
     if (this.type !== AppEditorPanel.NEWAPP) {
       $(`#${this.templateParams.appId}`).textbox({ readonly: true });
 
-      const { errorCode, errorMsg, app } = await appsModel.get(this.appId);
+      const { errorCode, errorMsg, entry: app } = await appsModel.get(this.appId);
       if (errorCode === 0) {
         $(`#${this.templateParams.appId}`).textbox('setText', this.appId);
         $(`#${this.templateParams.descEditorId}`).textbox('setText', app.description);
@@ -60,7 +58,7 @@ class AppEditorPanel extends TabPanel {
       const promise = appsModel.add(app);
       this._showOpStatus(promise, appId);
     } else {
-      const promise = appsModel.update(app);
+      const promise = appsModel.update(appId, app);
       this._showOpStatus(promise, appId);
     }
   }

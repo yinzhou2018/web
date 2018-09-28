@@ -18,7 +18,11 @@ app.use(cookieParser());
 app.use(express.static(`${__dirname}/public`));
 
 app.get('/', (req, res) => {
-  res.render('frame', { user: 'yinzhou', main_js_path: 'js/main.js', appId: null });
+  res.render('frame', { title: '浏览器云平台管理系统', user: 'yinzhou', main_js_path: 'js/main.js', appId: null });
+});
+
+app.get('/apps/:appId', (req, res) => {
+  res.render('frame', { title: '浏览器云平台应用管理', user: 'yinzhou', main_js_path: 'js/app.js', appId: req.params.appId, homepage: 'http://localhost:8000' });
 });
 
 app.use('/api/app', appsRouter);

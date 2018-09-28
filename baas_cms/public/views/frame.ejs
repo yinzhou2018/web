@@ -5,32 +5,37 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>浏览器云平台管理系统</title>
-  <link rel="stylesheet" type="text/css" href="lib/easyui/themes/bootstrap/easyui.css">
-  <link rel="stylesheet" type="text/css" href="lib/easyui/themes/icon.css">
-  <link rel="stylesheet" type="text/css" href="views/frame.css">
-  <script type="text/javascript" src="lib/easyui/jquery.min.js"></script>
-  <script type="text/javascript" src="lib/easyui/jquery.easyui.min.js"></script>
-  <script type="text/javascript" src="lib/easyui/locale/easyui-lang-zh_CN.js"></script>
-  <script type="text/javascript" src="lib/ejs.min.js"></script>
-  <script type="text/javascript" src="js/utils.js"></script>
-  <script type="text/javascript" src="js/tabs_view.js"></script>
-  <script type="text/javascript" src="js/navigator_view.js"></script>
-  <script type="text/javascript" src="<%=main_js_path%>"></script>
+  <link rel="stylesheet" type="text/css" href="/lib/easyui/themes/bootstrap/easyui.css">
+  <link rel="stylesheet" type="text/css" href="/lib/easyui/themes/icon.css">
+  <link rel="stylesheet" type="text/css" href="/views/frame.css">
+  <script type="text/javascript" src="/lib/easyui/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/easyui/jquery.easyui.min.js"></script>
+  <script type="text/javascript" src="/lib/easyui/locale/easyui-lang-zh_CN.js"></script>
+  <script type="text/javascript" src="/lib/ejs.min.js"></script>
+  <script type="text/javascript" src="/js/utils.js"></script>
+  <script type="text/javascript" src="/js/tabs_view.js"></script>
+  <script type="text/javascript" src="/js/navigator_view.js"></script>
+  <script type="text/javascript" src="/js/base_model.js"></script>
+  <script type="text/javascript" src="/<%=main_js_path%>"></script>
 </head>
 
 <body>
   <div id="container" class='easyui-layout' data-options="fit:true">
     <div id="header" data-options="region:'north'">
-      <h1>浏览器云平台管理系统</h1>
+      <h1>
+        <%=title%>
+      </h1>
       <% if (appId) { %>
-        <span style="font-size:medium">(<%=appId%>)</span>
-        <a href="<%=homepage%>" style="font-size:medium;color:white;margin-left:15px">首页</a>
+        <span id='app_id' style="font-size:x-large">(<%=appId%>)</span>
         <% } %>
-          <div id='help' style="margin-left:15px">
-            <img id='help-img' src="lib/easyui/themes/icons/help.png" />
-            <a id='help-btn' target="_blank" href="https://www.baidu.com">帮助</a>
+
+          <div id='header-nav' style="float:right;padding-right: 10px">
+            <% if (appId) { %>
+              <a href="<%=homepage%>" style="margin-right:10px">首页</a>
+              <% } %>
+                <a id='help-btn' style="margin-right:10px" target="_blank" href="https://www.baidu.com">帮助</a>
+                <span>当前用户：</span><span id='user'><%=user%></span>
           </div>
-          <span style="font-size:medium;">当前用户：</span><span id='user' style="font-size:medium;"><%=user%></span>
     </div>
     <div id="nav" data-options="region:'west',title:'导航区',split:true" style="width:200px">
       <ul id="menu" class="easyui-tree"></ul>
