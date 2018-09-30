@@ -5,9 +5,10 @@
   <table id='dg_app_list' class="easyui-datagrid" data-options="singleSelect:true,toolbar:'#tb',fitColumns:true, pagination:true" style='width:95%'>
     <thead>
       <tr>
-        <th data-options="field:'appId',width:150,formatter:appListPanel.formatAppId">应用名</th>
-        <th data-options="field:'updateTime', width:200">修改时间</th>
-        <th data-options="field:'updateUser', width:150">修改人</th>
+        <th data-options="field:'id',hidden:true">ID</th>
+        <th data-options="field:'app_id',width:150,formatter:appListPanel.formatAppId">应用名</th>
+        <th data-options="field:'edit_time', width:200">修改时间</th>
+        <th data-options="field:'rtx', width:150">修改人</th>
         <th data-options="field:'operation', formatter:appListPanel.formatOperation, width:200">操作</th>
       </tr>
     </thead>

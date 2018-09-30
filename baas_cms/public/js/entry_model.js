@@ -7,11 +7,7 @@ class EntryModel {
   }
 
   async query(condition = {}) {
-    let url = `${baseUrl}?random=${Math.random()}`;
-    for (let key in condition) {
-      url += `&${key}=${condition[key]}`;
-    }
-
+    const url = `${this.baseUrl}?random=${Math.random()}&cond=${JSON.stringify(condition)}`;
     const result = await utils.request({ url }).catch((e) => {
       return { errorCode: -123, errorMsg: 'unkown error!' };
     });
@@ -21,63 +17,56 @@ class EntryModel {
 
   async add(entry) {
     Object.assign(entry, this.constPart);
-    const result = await utils.request({ url: baseUrl, type: 'post', data: entry }).catch((e) => {
+    const result = await utils.request({ url: this.baseUrl, type: 'post', data: entry }).catch((e) => {
       return { errorCode: -123, errorMsg: 'unkown error!' };
     });
 
     if (!result.errorCode) {
-      _fireEvent(this.event.createName, result.entry);
+      entry.id = +result.id;
+      this._fireEvent(this.event.createName, entry);
     }
     return result;
   }
 
-  async get(id) {
-    const url = `${baseUrl}/${id}?random=${Math.random()}`;
-    const result = await utils.request({ url }).catch((e) => {
-      return { errorCode: -123, errorMsg: 'unkown error!' };
-    });
-
-    return result;
-  }
-
   async remove(id) {
-    const url = `${baseUrl}/${id}`;
+    const url = `${this.baseUrl}?cond=${JSON.stringify({id:{op:'=',value:id}})}`;
     const result = await utils.request({ url, type: 'delete' }).catch((e) => {
       return { errorCode: -123, errorMsg: 'unkown error!' };
     });
 
     if (!result.errorCode) {
-      _fireEvent(this.event.removeName, id);
+      this._fireEvent(this.event.removeName, +id);
     }
     return result;
   }
 
   async update(id, entry) {
     Object.assign(entry, this.constPart);
-    const url = `${baseUrl}/${id}`;
+    const url = `${this.baseUrl}?cond=${JSON.stringify({id:{op:'=',value:id}})}`;
     const result = await utils.request({ url, type: 'put', data: entry }).catch((e) => {
       return { errorCode: -123, errorMsg: 'unkown error!' };
     });
 
     if (!result.errorCode) {
-      _fireEvent(this.event.updateName, result.entry);
+      entry.id = +id;
+      this._fireEvent(this.event.updateName, entry);
     }
     return result;
   }
 
   addListener(listener) {
-    listeners.add(listener);
+    this.listeners.add(listener);
   }
 
   removeListener(listener) {
-    listeners.delete(listener);
+    this.listeners.delete(listener);
   }
 
   _fireEvent(methodName, arg) {
-    const tempListeners = [...listeners];
-    tempListeners.forEach((e) => {
-      if (e[methodName]) {
-        e[methodName](arg);
+    const tempListeners = [...this.listeners];
+    tempListeners.forEach((listener) => {
+      if (listener[methodName]) {
+        listener[methodName](arg);
       }
     });
   }

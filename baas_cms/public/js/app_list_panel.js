@@ -27,9 +27,9 @@ class AppListPanel extends TabPanel {
   }
 
   formatOperation(value, rowData, rowIndex) {
-    return `<a href='javascript:appListPanel.browserApp("${rowData.appId}")' style='margin-right:10px'>详情</a>
-    <a href='javascript:appListPanel.editApp("${rowData.appId}")' style='margin-right:10px'>编辑</a>
-    <a href='javascript:appListPanel.removeApp("${rowData.appId}")'>删除</a>`;
+    return `<a href='javascript:appListPanel.browserApp("${rowData.app_id}")' style='margin-right:10px'>详情</a>
+    <a href='javascript:appListPanel.editApp("${rowData.app_id}")' style='margin-right:10px'>编辑</a>
+    <a href='javascript:appListPanel.removeApp("${rowData.id}")'>删除</a>`;
   }
 
   async editApp(appId) {
@@ -54,8 +54,8 @@ class AppListPanel extends TabPanel {
     appEditorPanel.show();
   }
 
-  async removeApp(appId) {
-    appsModel.remove(appId);
+  async removeApp(id) {
+    appsModel.remove(id);
   }
 
   async search() {
@@ -77,23 +77,19 @@ class AppListPanel extends TabPanel {
     appsModel.removeListener(this);
   }
 
-  onAppCreated(app) {
+  onAppCreated() {
     const pager = $('#dg_app_list').datagrid('getPager');
     const { pageNumber, pageSize } = pager.pagination('options');
     this._reload(pageNumber, pageSize);
   }
 
-  onAppUpdated(app) {
-    const rows = $('#dg_app_list').datagrid('getRows');
-    for (let i = 0; i < rows.length; ++i) {
-      if (rows[i].appId === app.appId) {
-        $('#dg_app_list').datagrid('updateRow', { index: i, row: app });
-        break;
-      }
-    }
+  onAppUpdated() {
+    const pager = $('#dg_app_list').datagrid('getPager');
+    const { pageNumber, pageSize } = pager.pagination('options');
+    this._reload(pageNumber, pageSize);
   }
 
-  onAppRemoved(appId) {
+  onAppRemoved() {
     const pager = $('#dg_app_list').datagrid('getPager');
     const { total, pageNumber, pageSize } = pager.pagination('options');
     const realTotal = total - 1;
@@ -107,12 +103,12 @@ class AppListPanel extends TabPanel {
 
   async _reload(pageNumber, pageSize) {
     const offset = ((pageNumber === 0 ? 1 : pageNumber) - 1) * pageSize;
-    const options = { offset, limit: pageSize };
+    const options = { _offset_: offset, _limit_: pageSize };
     if (this.searchStatus.enter) {
-      Object.assign(options, { appId: this.searchStatus.appId, updateUser: this.searchStatus.updateUser });
+      Object.assign(options, { app_id: this.searchStatus.appId, rtx: this.searchStatus.updateUser });
     }
 
-    const { errorCode, errorMsg, enties: apps, total } = await appsModel.query(options);
+    const { errorCode, errorMsg, entries: apps, total } = await appsModel.query(options);
 
     if (errorCode === 0) {
       $('#dg_app_list').datagrid('loadData', apps);

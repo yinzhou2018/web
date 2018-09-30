@@ -25,7 +25,7 @@ app.get('/apps/:appId', (req, res) => {
   res.render('frame', { title: '浏览器云平台应用管理', user: 'yinzhou', main_js_path: 'js/app.js', appId: req.params.appId, homepage: 'http://localhost:8000' });
 });
 
-app.use('/api/classes/:tableName', classesRouter);
+app.use('/api/classes', classesRouter);
 
 var server = app.listen(8000, function() {
   var host = server.address().address;

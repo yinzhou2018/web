@@ -12,17 +12,20 @@ class AppEditorPanel extends TabPanel {
     super(title, 'views/app_editor_panel.ejs', templateParams);
     this.appId = appId;
     this.type = type;
+    this.id = '';
   }
 
   async onDocReady() {
     if (this.type !== AppEditorPanel.NEWAPP) {
       $(`#${this.templateParams.appId}`).textbox({ readonly: true });
 
-      const { errorCode, errorMsg, entry: app } = await appsModel.get(this.appId);
+      const { errorCode, errorMsg, entries } = await appsModel.query({ app_id: { op: '=', value: this.appId } });
       if (errorCode === 0) {
+        const app = entries[0];
+        this.id = app.id;
         $(`#${this.templateParams.appId}`).textbox('setText', this.appId);
-        $(`#${this.templateParams.descEditorId}`).textbox('setText', app.description);
-        $(`#${this.templateParams.confEditorId}`).textbox('setText', JSON.stringify(app.configuration));
+        $(`#${this.templateParams.descEditorId}`).textbox('setText', app.desc || '没有任何描述');
+        $(`#${this.templateParams.confEditorId}`).textbox('setText', app.conf);
       } else {
         $('#app_editor_fail_cause').text(errorMsg);
         $('#app_editor_fail_msg').css('display', 'block');
@@ -49,29 +52,26 @@ class AppEditorPanel extends TabPanel {
   commit(e) {
     e.preventDefault();
     const appId = $(`#${this.templateParams.appId}`).textbox('getText');
-    const description = $(`#${this.templateParams.descEditorId}`).textbox('getText');
-    let configuration = $(`#${this.templateParams.confEditorId}`).textbox('getText');
-    configuration = JSON.parse(configuration);
-    const app = { appId, description, configuration };
+    const conf = $(`#${this.templateParams.confEditorId}`).textbox('getText');
+    const app = { app_id: appId, conf };
 
     if (this.type === AppEditorPanel.NEWAPP) {
       const promise = appsModel.add(app);
       this._showOpStatus(promise, appId);
     } else {
-      const promise = appsModel.update(appId, app);
+      const promise = appsModel.update(this.id, app);
       this._showOpStatus(promise, appId);
     }
   }
 
-  onAppUpdated({ appId, description, configuration }) {
-    if (this.type === AppEditorPanel.BROWSERAPP && this.appId === appId) {
-      $(`#${this.templateParams.descEditorId}`).textbox('setText', description);
-      $(`#${this.templateParams.confEditorId}`).textbox('setText', JSON.stringify(configuration));
+  onAppUpdated({ id, conf }) {
+    if (this.type === AppEditorPanel.BROWSERAPP && this.id === id) {
+      $(`#${this.templateParams.confEditorId}`).textbox('setText', conf);
     }
   }
 
-  onAppRemoved(appId) {
-    if (this.appId === appId) {
+  onAppRemoved(id) {
+    if (this.id === id) {
       tabsView.closeTab(this.title);
     }
   }
@@ -87,7 +87,7 @@ class AppEditorPanel extends TabPanel {
       title: '请稍候',
       msg: `应用${text}中...`
     });
-    promise.then(({ errorCode, errorMsg, app }) => {
+    promise.then(({ errorCode, errorMsg }) => {
       $.messager.progress('close');
       if (errorCode !== 0) {
         $.messager.alert({
