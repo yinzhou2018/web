@@ -1,0 +1,29 @@
+<div style="padding-top:10px" style='width:100%'>
+  <div id='<%=failMsgId%>' style="color:red;display:none;margin-bottom:10px;font-size:medium">
+    <%=title%>加载失败，原因:<span id='<%=failCauseId%>'></span>
+  </div>
+  <table id='<%=dgId%>' class="easyui-datagrid" data-options="singleSelect:true,toolbar:'#<%=tbId%>',fitColumns:true, pagination:true" style='width:95%'>
+    <thead>
+      <tr>
+        <% for (const column of columns) {%>
+          <th data-options="<%=column.dataOptions%>"><%=column.title%></th>
+        <%}%>
+      </tr>
+    </thead>
+  </table>
+  <div id='<%=tbId%>' style='padding: 10px'>
+    <% for (const item of toolbar) {%>
+      <label><%=item.label%>: </label>
+      <% if (item.type === 'textbox') {%>
+        <input id="<%=item.id%>" class="easyui-textbox" style="width:<%=item.width||150%>px">
+      <%} else if (item.type === 'combobox') {%>
+        <select id="<%=item.id%>" class="easyui-combobox" data-options="editable:false, panelHeight:'auto'" style="width:<%=item.width||150%>px">
+          <% for (const option of item.options) {%>
+            <option value='<%=option.value%>'><%=option.text%></option>
+          <%}%>
+        </select>
+      <%}%>
+    <%}%>
+    <a href="#" class="easyui-linkbutton" id='<%=searchId%>' iconCls="icon-search">搜索</a>
+  </div>
+</div>
