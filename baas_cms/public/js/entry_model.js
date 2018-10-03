@@ -1,8 +1,7 @@
 class EntryModel {
-  constructor(className, event, constPart = {}) {
+  constructor(className, constPart = {}) {
     this.listeners = new Set();
     this.baseUrl = `api/classes/${className}`;
-    this.event = event;
     this.constPart = constPart;
   }
 
@@ -23,7 +22,7 @@ class EntryModel {
 
     if (!result.errorCode) {
       entry.id = +result.id;
-      this._fireEvent(this.event.createName, entry);
+      this._fireEvent('onEntryCreated', entry);
     }
     return result;
   }
@@ -35,7 +34,7 @@ class EntryModel {
     });
 
     if (!result.errorCode) {
-      this._fireEvent(this.event.removeName, +id);
+      this._fireEvent('onEntryRemoved', +id);
     }
     return result;
   }
@@ -49,7 +48,7 @@ class EntryModel {
 
     if (!result.errorCode) {
       entry.id = +id;
-      this._fireEvent(this.event.updateName, entry);
+      this._fireEvent('onEntryUpdated', entry);
     }
     return result;
   }

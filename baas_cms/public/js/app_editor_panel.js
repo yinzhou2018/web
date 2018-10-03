@@ -64,13 +64,13 @@ class AppEditorPanel extends TabPanel {
     }
   }
 
-  onAppUpdated({ id, conf }) {
+  onEntryUpdated({ id, conf }) {
     if (this.type === AppEditorPanel.BROWSERAPP && this.id === id) {
       $(`#${this.templateParams.confEditorId}`).textbox('setText', conf);
     }
   }
 
-  onAppRemoved(id) {
+  onEntryRemoved(id) {
     if (this.id === id) {
       tabsView.closeTab(this.title);
     }

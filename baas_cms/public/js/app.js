@@ -61,7 +61,7 @@
       return null;
     },
 
-    GetCodeStatusEntry(key) {
+    getCodeStatusEntry(key) {
       for (e in CodeStatus) {
         if (CodeStatus[e].value === key || CodeStatus[e].text === key) {
           return CodeStatus[e];
@@ -137,12 +137,8 @@
 
   $(document).ready(function() {
     global.userName = $('#user').text();
-    global.appId = $('#appId').text();
+    global.appId = $('#app_id').attr('app_id');
     window.codesModel = new EntryModel('hooks', {
-      createName: 'onCodeCreated',
-      removeName: 'onCodeRemoved',
-      updateName: 'onCodeUpdated'
-    }, {
       rtx: global.userName,
       app_id: global.appId
     });

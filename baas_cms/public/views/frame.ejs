@@ -16,6 +16,7 @@
   <script type="text/javascript" src="/js/tabs_view.js"></script>
   <script type="text/javascript" src="/js/navigator_view.js"></script>
   <script type="text/javascript" src="/js/entry_model.js"></script>
+  <script type="text/javascript" src="/js/entry_list_panel.js"></script>
   <script type="text/javascript" src="/<%=main_js_path%>"></script>
 </head>
 
@@ -26,7 +27,7 @@
         <%=title%>
       </h1>
       <% if (appId) { %>
-        <span id='app_id' style="font-size:x-large">(<%=appId%>)</span>
+        <span id='app_id' app_id='<%=appId%>' style="font-size:x-large">(<%=appId%>)</span>
         <% } %>
 
           <div id='header-nav' style="float:right;padding-right: 10px">

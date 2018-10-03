@@ -76,6 +76,6 @@ const utils = {
         ary.push(obj[key]);
       }
       return ary;
-    }
+    } 
 
   } //utils

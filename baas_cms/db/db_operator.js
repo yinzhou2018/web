@@ -2,11 +2,11 @@ const conf = require('./db_config');
 const MysqlAdapter = require('./mysql_adapter');
 const mysql = new MysqlAdapter(conf);
 
-const compMap = {
-  'like': () => `%?%`,
-  'not like': () => `%?%`,
-  '=': () => '?',
-  '!=': () => '?'
+const opMap = {
+  'like': (value) => `%${value}%`,
+  'not like': (value) => `%${value}%`,
+  '=': (value) => value,
+  '!=': (value) => value
 };
 
 function _checkTableName(tableName) {
@@ -24,12 +24,12 @@ function _buiidCondition(condition) {
       const v = condition[key];
       const value = v.value ? v.value : v;
       const op = v.op || 'like';
-      const fn = compMap[op];
+      const fn = opMap[op];
       if (!fn) {
         throw { errorCode: -3, errorMsg: `'${op}' is an invalid operator for field '${key}'` }
       }
-      params = params.concat([key, value]);
-      condPart += ` and ?? ${op} ${fn()}`;
+      params = params.concat([key, fn(value)]);
+      condPart += ` and ?? ${op} ?`;
     }
   }
   return [condPart, params];
@@ -67,9 +67,9 @@ async function query(tableName, condition) {
   const result = {};
 
   if (limitPart.length !== 0) {
-    const countSql = `select count(1) as total from ${tableName} where 1 = 1${condPart}${limitPart}`;
-    const result = await mysql.execute(countSql, params);
-    Object.assign(result, { total: result[0].total });
+    const countSql = `select count(1) as total from ${tableName} where 1 = 1${condPart}`;
+    const hr = await mysql.execute(countSql, params);
+    Object.assign(result, { total: hr[0].total });
   }
 
   const dataSql = `select * from ${tableName} where 1 = 1${condPart} order by edit_time desc${limitPart}`;
